@@ -4,7 +4,7 @@ import { User } from "@/types/auth";
 export const fetchCurrentUser = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken");
-    const response = await axios.get<User>("/api/auth/ping", {
+    const response = await axios.get<User>("/api/user/ping", {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
       },
