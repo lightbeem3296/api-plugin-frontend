@@ -49,7 +49,7 @@ export default function RegisterPage() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-      await axios.post("/api/auth/register", data, {
+      await axios.post("/api/user/register", data, {
         headers: {
           "Content-Type": "application/json",
         },
