@@ -1,27 +1,33 @@
 'use client';
 
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { customAlert, CustomAlertType } from "@/components/ui/alert";
+import { DeleteButton, EditButton, NewButton } from "@/components/ui/datatable/button";
+import { myTheme } from "@/components/ui/theme/agGrid";
+import { axiosHelper } from "@/lib/axios";
+import { ApiGeneralResponse } from "@/types/api";
+import { ActionCellRenderParams, TaskRowData } from "@/types/datatable";
+import { TaskConfigRead, TaskEditPageMode } from "@/types/task";
+import { getTaskRowData } from "@/utils/types";
 import type { CellValueChangedEvent, ColDef, ColGroupDef, GridReadyEvent, Theme } from "ag-grid-community";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { axiosHelper } from "@/lib/axios";
-import { ApiGeneralResponse } from "@/types/api";
-import { myTheme } from "@/components/ui/theme/agGrid";
-import { customAlert, CustomAlertType } from "@/components/ui/alert";
-import { TaskConfigRead } from "@/types/task";
-import { getTaskRowData } from "@/utils/types";
-import { ActionCellRenderParams, TaskRowData } from "@/types/datatable";
-import { DeleteButton, EditButton, NewButton } from "@/components/ui/datatable/button";
+import { useRouter } from "next/navigation";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function TaskPage() {
+  const router = useRouter();
   const gridRef = useRef<AgGridReact>(null);
   const [rowDataList, setRowDataList] = useState<TaskRowData[]>();
 
   // UI Functions
   const onClickNewRow = async () => {
-    alert("new");
+    router.push(`/main/tasks/edit?mode=${TaskEditPageMode.CREATE}`);
+  }
+
+  const onEdit = async (obj: TaskRowData) => {
+    router.push(`/main/tasks/edit?mode=${TaskEditPageMode.EDIT}&id=${obj._id}`);
   }
 
   // CRUD Functions
@@ -37,10 +43,6 @@ export default function TaskPage() {
         setRowDataList(objList);
       }
     }
-  }
-
-  const onEdit = async (obj: TaskRowData) => {
-    alert("Edit: " + obj._id);
   }
 
   const onDelete = async (obj: TaskRowData) => {
@@ -103,7 +105,7 @@ export default function TaskPage() {
       sortable: false,
       cellRenderer: (params: ActionCellRenderParams<TaskRowData>) => (
         <div className="h-full flex items-center gap-1">
-          <EditButton onClick={() => params.onEdit ? params.onEdit(params.data) : alert("click")}/>
+          <EditButton onClick={() => params.onEdit ? params.onEdit(params.data) : alert("click")} />
           <DeleteButton onClick={() => params.onDelete ? params.onDelete(params.data) : alert("click")} />
         </div>
       ),

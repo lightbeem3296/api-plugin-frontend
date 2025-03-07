@@ -1,3 +1,5 @@
+import { extractKeys } from "@/utils/record";
+
 export interface EnigxConfig {
   tenant_id: string;
   project_id: string;
@@ -8,12 +10,23 @@ export enum FetchMethod {
   GET = "get",
   POST = "post",
 }
+export const fetchMethodMap: Record<string, string> = {
+  "get": "GET",
+  "post": "POST",
+}
+export const fetchMethodCodes = extractKeys(fetchMethodMap);
 
 export enum FetchDataType {
   JSON = "json",
   FILE = "file",
   HTML = "html",
 }
+export const fetchDataTypeMap: Record<string, string> = {
+  "json": "JSON",
+  "file": "File",
+  "html": "HTML",
+}
+export const fetchDataTypeCodes = extractKeys(fetchDataTypeMap);
 
 export enum FetchTokenType {
   HEADER_TOKEN = "header_token",
@@ -47,4 +60,9 @@ export interface TaskConfigRead extends TaskConfig {
 
   is_scheduled: boolean;
   next_run_time: string | null;
+}
+
+export enum TaskEditPageMode {
+  EDIT = "edit",
+  CREATE = "create",
 }

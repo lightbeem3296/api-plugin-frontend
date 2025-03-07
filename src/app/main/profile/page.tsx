@@ -77,7 +77,7 @@ export default function LogoutPage() {
           Profile
         </p>
       </div>
-      <div className="p-4 min-h-[calc(100vh-10.1rem)]">
+      <div className="p-4 min-h-[calc(100vh-11.4rem)]">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-screen-sm">
           {/* Username */}
           <div className="col-span-1 font-medium">Username</div>
