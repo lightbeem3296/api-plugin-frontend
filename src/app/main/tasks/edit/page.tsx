@@ -145,7 +145,7 @@ function TaskEditPageContent() {
             {/* Task Description */}
             <fieldset>
               <legend className="fieldset-legend">Description</legend>
-              <label className="input input-sm input-bordered flex items-center gap-2 w-60">
+              <label className="input input-sm input-bordered flex items-center gap-2 w-full">
                 <input
                   type="text"
                   className="w-full"

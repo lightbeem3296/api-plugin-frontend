@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {
         loading
           ? null
-          : <div className="flex min-h-screen bg-primary/5">
+          : <div className="flex min-h-screen bg-base-100">
             {children}
           </div>
       }
