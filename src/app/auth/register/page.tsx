@@ -1,15 +1,15 @@
 "use client";
 
+import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import Link from "next/link";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { customAlert, CustomAlertType } from "@/components/ui/alert";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 interface FormData {
   username: string;
@@ -84,7 +84,7 @@ export default function RegisterPage() {
     <div className="w-full flex">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 w-full sm:w-96 sm:h-fit mx-auto px-8 py-16 rounded-md sm:mt-20 bg-gradient-to-tr from-primary/5 via-primary/10 to-primary/5"
+        className="flex flex-col gap-4 w-full sm:w-96 sm:h-fit mx-auto px-8 py-16 rounded-md sm:mt-20 bg-base-200"
       >
         <div className="flex justify-center mb-8">
           <span className="font-sans font-medium text-xl">

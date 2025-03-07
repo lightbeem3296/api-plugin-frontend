@@ -12,6 +12,7 @@ export const userRoleFieldCodes = extractKeys(userRoleFieldMap);
 
 
 export interface User {
+  _id: string
   username: string
   role: UserRole
 }

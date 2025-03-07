@@ -7,10 +7,10 @@ import { ApiGeneralResponse } from "@/types/api";
 import { ChangePasswordRequest } from "@/types/auth";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 interface ChangePasswordFormData {
   new_password: string;
@@ -72,12 +72,12 @@ export default function LogoutPage() {
 
   return (
     <div>
-      <div className="flex justify-between px-2 py-4">
+      <div className="flex justify-between py-4">
         <p className="text-lg font-medium text-base-content">
           Profile
         </p>
       </div>
-      <div className="p-4 min-h-[calc(100vh-10.1rem)]">
+      <div className="p-4 min-h-[calc(100vh-11.4rem)]">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-screen-sm">
           {/* Username */}
           <div className="col-span-1 font-medium">Username</div>
@@ -90,7 +90,7 @@ export default function LogoutPage() {
           >
             <div className="flex flex-col gap-2">
               <fieldset>
-                <legend className="fieldset-label">New Password <span className="text-red-600">*</span></legend>
+                <legend className="fieldset-legend">New Password <span className="text-red-600">*</span></legend>
                 <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                   <input
                     type={showNewPassword ? "text" : "password"}
@@ -115,7 +115,7 @@ export default function LogoutPage() {
                 )}
               </fieldset>
               <fieldset>
-                <legend className="fieldset-label">New Password Confirm <span className="text-red-600">*</span></legend>
+                <legend className="fieldset-legend">New Password Confirm <span className="text-red-600">*</span></legend>
                 <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                   <input
                     type={showConfirmPassword ? "text" : "password"}

@@ -1,5 +1,5 @@
 import { customAlert, CustomAlertType } from "@/components/ui/alert";
-import axios, { AxiosRequestConfig, AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export class AxiosHelper {
   private axiosInstance: AxiosInstance;
