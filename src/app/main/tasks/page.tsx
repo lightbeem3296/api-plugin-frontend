@@ -84,6 +84,7 @@ export default function TaskPage() {
       headerName: "Is Scheduled",
       field: "is_scheduled",
       width: 140,
+      cellRenderer: (params: any) => params.value ? "Yes" : "No", // eslint-disable-line
     },
     {
       headerName: "Interval",
