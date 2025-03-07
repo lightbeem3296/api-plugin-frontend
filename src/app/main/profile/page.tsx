@@ -7,10 +7,10 @@ import { ApiGeneralResponse } from "@/types/api";
 import { ChangePasswordRequest } from "@/types/auth";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 interface ChangePasswordFormData {
   new_password: string;

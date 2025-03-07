@@ -32,6 +32,11 @@ export enum FetchTokenType {
   HEADER_TOKEN = "header_token",
   QUERY_TOKEN = "query_token",
 }
+export const fetchTokenTypeMap: Record<string, string> = {
+  "header_token": "Header Token",
+  "query_token": "Query Token",
+}
+export const fetchTokenTypeCodes = extractKeys(fetchTokenTypeMap);
 
 export interface FetchAuthToken {
   type: FetchTokenType;

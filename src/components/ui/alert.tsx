@@ -1,5 +1,5 @@
 import { extractKeys, lookupValue } from "@/utils/record";
-import { Bounce, toast, ToastOptions } from "react-toastify"
+import { Bounce, toast, ToastOptions } from "react-toastify";
 
 export enum CustomAlertType {
   INFO = "info",

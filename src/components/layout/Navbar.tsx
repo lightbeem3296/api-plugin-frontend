@@ -1,9 +1,9 @@
 'use client'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDashboard, faSignOut, faTasks, faUser } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
 import { loadCurrentUser } from '@/services/authService';
+import { faDashboard, faSignOut, faTasks, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
 import ThemeController from '../ui/theme/ThemeController';
 
 export default function Navbar() {

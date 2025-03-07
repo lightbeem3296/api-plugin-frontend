@@ -1,5 +1,5 @@
-import axios from "axios";
 import { User } from "@/types/auth";
+import axios from "axios";
 
 export const fetchCurrentUser = async () => {
   try {

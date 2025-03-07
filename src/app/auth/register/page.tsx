@@ -1,15 +1,15 @@
 "use client";
 
+import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import Link from "next/link";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { customAlert, CustomAlertType } from "@/components/ui/alert";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 interface FormData {
   username: string;

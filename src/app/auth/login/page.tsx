@@ -2,16 +2,16 @@
 
 import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { fetchCurrentUser } from "@/services/authService";
+import { Token } from "@/types/auth";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Token } from "@/types/auth";
 
 interface FormData {
   username: string;

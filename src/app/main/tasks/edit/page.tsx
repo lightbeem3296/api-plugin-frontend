@@ -3,9 +3,9 @@
 import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { axiosHelper } from "@/lib/axios";
 import { ApiGeneralResponse } from "@/types/api";
-import { FetchDataType, fetchDataTypeCodes, fetchDataTypeMap, FetchMethod, fetchMethodCodes, fetchMethodMap, FetchTokenType, TaskConfig, TaskEditPageMode } from "@/types/task";
+import { FetchDataType, fetchDataTypeCodes, fetchDataTypeMap, FetchMethod, fetchMethodCodes, fetchMethodMap, FetchTokenType, fetchTokenTypeCodes, fetchTokenTypeMap, TaskConfig, TaskEditPageMode } from "@/types/task";
 import { lookupValue } from "@/utils/record";
-import { faArrowLeft, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -58,14 +58,106 @@ function TaskEditPageContent() {
   }
 
   const handleChangeFetchMethod = (value: string) => {
-    setTask({ ...task, fetch_config: { ...task.fetch_config, method: value as FetchMethod } })
+    setTask({
+      ...task,
+      fetch_config: {
+        ...task.fetch_config,
+        method: value as FetchMethod
+      }
+    })
   }
 
   const handleChangeDataType = (value: string) => {
-    setTask({ ...task, fetch_config: { ...task.fetch_config, data_type: value as FetchDataType } })
+    setTask({
+      ...task,
+      fetch_config: {
+        ...task.fetch_config,
+        data_type: value as FetchDataType
+      }
+    })
   }
 
-  const handleSave = async () => {
+  const handleChangeAuthTokenType = (value: string) => {
+    setTask({
+      ...task,
+      fetch_config: {
+        ...task.fetch_config,
+        auth_token: {
+          ...task.fetch_config.auth_token,
+          type: value as FetchTokenType
+        }
+      }
+    })
+  }
+
+  const handleAddToken = () => {
+    setTask({
+      ...task,
+      fetch_config: {
+        ...task.fetch_config,
+        auth_token: {
+          ...task.fetch_config.auth_token,
+          token: {
+            ...task.fetch_config.auth_token.token,
+            [`additionalProp${Object.keys(task.fetch_config.auth_token.token).length + 1}`]: "string"
+          }
+        }
+      }
+    });
+  }
+
+  const handleChangeTokenKey = (index: number, value: string) => {
+    setTask({
+      ...task,
+      fetch_config: {
+        ...task.fetch_config,
+        auth_token: {
+          ...task.fetch_config.auth_token,
+          token: Object.fromEntries(
+            Object.entries(task.fetch_config.auth_token.token).map(([key, val], i) =>
+              i === index
+                ? [value, val]
+                : [key, val])
+          )
+        }
+      }
+    });
+  }
+
+  const handleChangeTokenValue = (index: number, value: string) => {
+    setTask({
+      ...task,
+      fetch_config: {
+        ...task.fetch_config,
+        auth_token: {
+          ...task.fetch_config.auth_token,
+          token: Object.fromEntries(
+            Object.entries(task.fetch_config.auth_token.token).map(([key, val], i) =>
+              i === index
+                ? [key, value]
+                : [key, val])
+          )
+        }
+      }
+    });
+  }
+
+  const handleDeleteToken = (index: number) => {
+    setTask({
+      ...task,
+      fetch_config: {
+        ...task.fetch_config,
+        auth_token: {
+          ...task.fetch_config.auth_token,
+          token: Object.fromEntries(
+            Object.entries(task.fetch_config.auth_token.token).filter((_, i) => i !== index)
+          )
+        }
+      }
+    });
+  }
+
+  const handleSaveToken = async () => {
     setLoading(true);
     try {
       if (pageMode === TaskEditPageMode.CREATE) {
@@ -131,29 +223,40 @@ function TaskEditPageContent() {
             {/* Task Name */}
             <fieldset>
               <legend className="fieldset-legend">Task Name</legend>
-              <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-                <input
-                  type="text"
-                  className="grow"
-                  disabled={loading}
-                  value={task.task_name}
-                  onChange={(e) => setTask({ ...task, task_name: e.target.value })}
-                />
-              </label>
+              <input
+                type="text"
+                className="input input-sm w-60"
+                disabled={loading}
+                value={task.task_name}
+                onChange={(e) => setTask({ ...task, task_name: e.target.value })}
+              />
             </fieldset>
 
             {/* Task Description */}
             <fieldset>
               <legend className="fieldset-legend">Description</legend>
-              <label className="input input-sm input-bordered flex items-center gap-2 w-full">
-                <input
-                  type="text"
-                  className="w-full"
-                  disabled={loading}
-                  value={task.description}
-                  onChange={(e) => setTask({ ...task, description: e.target.value })}
-                />
-              </label>
+              <input
+                type="text"
+                className="input input-sm w-full"
+                disabled={loading}
+                value={task.description}
+                onChange={(e) => setTask({ ...task, description: e.target.value })}
+              />
+            </fieldset>
+
+            {/* Interval Seconds */}
+            <fieldset>
+              <legend className="fieldset-legend">Interval Seconds</legend>
+              <input
+                type="number"
+                className="input input-sm"
+                disabled={loading}
+                value={task.interval_secs}
+                onChange={(e) => setTask({ ...task, interval_secs: Number(e.target.value) })}
+              />
+              <legend className="fieldset-label">
+                This value is used for task scheduling. Scheduled task will run every {task.interval_secs} seconds
+              </legend>
             </fieldset>
           </div>
 
@@ -179,27 +282,13 @@ function TaskEditPageContent() {
                 </fieldset>
                 <fieldset>
                   <legend className="fieldset-legend">URL</legend>
-                  <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-                    <input
-                      type="text"
-                      className="grow"
-                      disabled={loading}
-                      value={task.fetch_config.url}
-                      onChange={(e) => setTask({ ...task, fetch_config: { ...task.fetch_config, url: e.target.value } })}
-                    />
-                  </label>
-                </fieldset>
-                <fieldset>
-                  <legend className="fieldset-legend">Auth Token</legend>
-                  <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-                    <input
-                      type="text"
-                      className="grow"
-                      disabled={loading}
-                      value={task.fetch_config.auth_token.type}
-                      onChange={(e) => setTask({ ...task, fetch_config: { ...task.fetch_config, auth_token: { ...task.fetch_config.auth_token, type: e.target.value as FetchTokenType } } })}
-                    />
-                  </label>
+                  <input
+                    type="text"
+                    className="input input-sm w-60"
+                    disabled={loading}
+                    value={task.fetch_config.url}
+                    onChange={(e) => setTask({ ...task, fetch_config: { ...task.fetch_config, url: e.target.value } })}
+                  />
                 </fieldset>
                 <fieldset>
                   <legend className="fieldset-legend">Data Type</legend>
@@ -218,16 +307,67 @@ function TaskEditPageContent() {
                 </fieldset>
                 <fieldset>
                   <legend className="fieldset-legend">Success Code</legend>
-                  <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-                    <input
-                      type="text"
-                      className="grow"
-                      disabled={loading}
-                      value={task.fetch_config.success_code}
-                      onChange={(e) => setTask({ ...task, fetch_config: { ...task.fetch_config, success_code: parseInt(e.target.value) } })}
-                    />
-                  </label>
+                  <input
+                    type="text"
+                    className="input input-sm w-60"
+                    disabled={loading}
+                    value={task.fetch_config.success_code}
+                    onChange={(e) => setTask({ ...task, fetch_config: { ...task.fetch_config, success_code: parseInt(e.target.value) } })}
+                  />
                 </fieldset>
+                <fieldset>
+                  <legend className="fieldset-legend">Auth Token Type</legend>
+                  <select
+                    className="select select-bordered select-sm w-60"
+                    value={task.fetch_config.auth_token.type}
+                    onChange={(e) => handleChangeAuthTokenType(e.target.value as FetchTokenType)}
+                  >
+                    <option disabled value="">Select token type</option>
+                    {fetchTokenTypeCodes.map((key) => (
+                      <option key={key} value={key}>
+                        {lookupValue(fetchTokenTypeMap, key)}
+                      </option>
+                    ))}
+                  </select>
+                </fieldset>
+                <div className="w-full flex flex-col gap-2">
+                  <div className="flex w-full items-center justify-between">
+                    <legend className="fieldset-legend">Auth Tokens</legend>
+                    <button
+                      className="btn btn-xs btn-info btn-outline"
+                      onClick={() => handleAddToken()}
+                    >
+                      + Add token
+                    </button>
+                  </div>
+                  {Object.entries(task.fetch_config.auth_token.token).length > 0
+                    ? Object.entries(task.fetch_config.auth_token.token).map(([key, value], index) => (
+                      <div key={index} className="grid grid-cols-6 gap-4">
+                        <input
+                          type="text"
+                          className="input input-sm col-span-2 w-full"
+                          disabled={loading}
+                          value={key}
+                          onChange={(e) => handleChangeTokenKey(index, e.target.value)}
+                        />
+                        <input
+                          type="text"
+                          className="input input-sm col-span-3 w-full"
+                          disabled={loading}
+                          value={value}
+                          onChange={(e) => handleChangeTokenValue(index, e.target.value)}
+                        />
+                        <button
+                          className="btn btn-sm col-span-1 btn-error btn-outline"
+                          onClick={() => handleDeleteToken(index)}
+                        >
+                          <FontAwesomeIcon icon={faTrash} width={12} />
+                        </button>
+                      </div>
+                    ))
+                    : <span className="label italic">No tokens yet</span>
+                  }
+                </div>
               </div>
             </div>
 
@@ -237,39 +377,33 @@ function TaskEditPageContent() {
               <div className="flex flex-col gap-4 p-4 border border-base-content/20 rounded-md">
                 <fieldset>
                   <legend className="fieldset-legend">Tenant ID</legend>
-                  <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-                    <input
-                      type="text"
-                      className="grow"
-                      disabled={loading}
-                      value={task.enigx_config.tenant_id}
-                      onChange={(e) => setTask({ ...task, enigx_config: { ...task.enigx_config, tenant_id: e.target.value } })}
-                    />
-                  </label>
+                  <input
+                    type="text"
+                    className="input input-sm w-60"
+                    disabled={loading}
+                    value={task.enigx_config.tenant_id}
+                    onChange={(e) => setTask({ ...task, enigx_config: { ...task.enigx_config, tenant_id: e.target.value } })}
+                  />
                 </fieldset>
                 <fieldset>
                   <legend className="fieldset-legend">Project ID</legend>
-                  <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-                    <input
-                      type="text"
-                      className="grow"
-                      disabled={loading}
-                      value={task.enigx_config.project_id}
-                      onChange={(e) => setTask({ ...task, enigx_config: { ...task.enigx_config, project_id: e.target.value } })}
-                    />
-                  </label>
+                  <input
+                    type="text"
+                    className="input input-sm w-60"
+                    disabled={loading}
+                    value={task.enigx_config.project_id}
+                    onChange={(e) => setTask({ ...task, enigx_config: { ...task.enigx_config, project_id: e.target.value } })}
+                  />
                 </fieldset>
                 <fieldset>
                   <legend className="fieldset-legend">Bearer Token</legend>
-                  <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-                    <input
-                      type="text"
-                      className="grow"
-                      disabled={loading}
-                      value={task.enigx_config.bearer_token}
-                      onChange={(e) => setTask({ ...task, enigx_config: { ...task.enigx_config, bearer_token: e.target.value } })}
-                    />
-                  </label>
+                  <input
+                    type="text"
+                    className="input input-sm w-60"
+                    disabled={loading}
+                    value={task.enigx_config.bearer_token}
+                    onChange={(e) => setTask({ ...task, enigx_config: { ...task.enigx_config, bearer_token: e.target.value } })}
+                  />
                 </fieldset>
               </div>
             </div>
@@ -279,7 +413,7 @@ function TaskEditPageContent() {
           <div className="w-full flex">
             <button
               className="btn btn-primary btn-sm text-gray-100 px-8 w-20"
-              onClick={handleSave}
+              onClick={handleSaveToken}
             >
               <FontAwesomeIcon icon={faSave} width={12} /> Save
             </button>
