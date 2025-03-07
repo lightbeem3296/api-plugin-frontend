@@ -106,7 +106,7 @@ function TaskEditPageContent() {
 
   return (
     <div>
-      <div className="flex justify-between px-2 py-4">
+      <div className="flex justify-between py-4">
         <p className="text-lg font-medium text-base-content/80">
           {
             pageMode === TaskEditPageMode.CREATE
@@ -125,43 +125,45 @@ function TaskEditPageContent() {
           </button>
         </div>
       </div>
-      <div className="h-fit md:h-[calc(100vh-11.4rem)]">
-        <div className="w-full flex flex-col gap-2">
-          {/* Task Name */}
-          <fieldset>
-            <legend className="fieldset-label">Task Name</legend>
-            <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-              <input
-                type="text"
-                className="grow"
-                disabled={loading}
-                value={task.task_name}
-                onChange={(e) => setTask({ ...task, task_name: e.target.value })}
-              />
-            </label>
-          </fieldset>
+      <div className="h-fit min-h-[calc(100vh-11.4rem)]">
+        <div className="w-full flex flex-col gap-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Task Name */}
+            <fieldset>
+              <legend className="fieldset-legend">Task Name</legend>
+              <label className="input input-sm input-bordered flex items-center gap-2 w-60">
+                <input
+                  type="text"
+                  className="grow"
+                  disabled={loading}
+                  value={task.task_name}
+                  onChange={(e) => setTask({ ...task, task_name: e.target.value })}
+                />
+              </label>
+            </fieldset>
 
-          {/* Task Description */}
-          <fieldset>
-            <legend className="fieldset-label">Description</legend>
-            <label className="input input-sm input-bordered flex items-center gap-2 w-60">
-              <input
-                type="text"
-                className="w-full"
-                disabled={loading}
-                value={task.description}
-                onChange={(e) => setTask({ ...task, description: e.target.value })}
-              />
-            </label>
-          </fieldset>
+            {/* Task Description */}
+            <fieldset>
+              <legend className="fieldset-legend">Description</legend>
+              <label className="input input-sm input-bordered flex items-center gap-2 w-60">
+                <input
+                  type="text"
+                  className="w-full"
+                  disabled={loading}
+                  value={task.description}
+                  onChange={(e) => setTask({ ...task, description: e.target.value })}
+                />
+              </label>
+            </fieldset>
+          </div>
 
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Fetch Config */}
             <div className="col-span-1">
-              <span className="fieldset-label">Fetch Config</span>
+              <span className="fieldset-legend">Fetch Config</span>
               <div className="flex flex-col gap-4 p-4 border border-base-content/20 rounded-md">
                 <fieldset>
-                  <legend className="fieldset-label">Method</legend>
+                  <legend className="fieldset-legend">Method</legend>
                   <select
                     className="select select-bordered select-sm w-60"
                     value={task.fetch_config.method}
@@ -176,7 +178,7 @@ function TaskEditPageContent() {
                   </select>
                 </fieldset>
                 <fieldset>
-                  <legend className="fieldset-label">URL</legend>
+                  <legend className="fieldset-legend">URL</legend>
                   <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                     <input
                       type="text"
@@ -188,7 +190,7 @@ function TaskEditPageContent() {
                   </label>
                 </fieldset>
                 <fieldset>
-                  <legend className="fieldset-label">Auth Token</legend>
+                  <legend className="fieldset-legend">Auth Token</legend>
                   <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                     <input
                       type="text"
@@ -200,7 +202,7 @@ function TaskEditPageContent() {
                   </label>
                 </fieldset>
                 <fieldset>
-                  <legend className="fieldset-label">Data Type</legend>
+                  <legend className="fieldset-legend">Data Type</legend>
                   <select
                     className="select select-bordered select-sm w-60"
                     value={task.fetch_config.data_type}
@@ -215,7 +217,7 @@ function TaskEditPageContent() {
                   </select>
                 </fieldset>
                 <fieldset>
-                  <legend className="fieldset-label">Success Code</legend>
+                  <legend className="fieldset-legend">Success Code</legend>
                   <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                     <input
                       type="text"
@@ -231,10 +233,10 @@ function TaskEditPageContent() {
 
             {/* Enigx Config */}
             <div className="col-span-1">
-              <span className="fieldset-label">Enigx Config</span>
+              <span className="fieldset-legend">Enigx Config</span>
               <div className="flex flex-col gap-4 p-4 border border-base-content/20 rounded-md">
                 <fieldset>
-                  <legend className="fieldset-label">Tenant ID</legend>
+                  <legend className="fieldset-legend">Tenant ID</legend>
                   <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                     <input
                       type="text"
@@ -246,7 +248,7 @@ function TaskEditPageContent() {
                   </label>
                 </fieldset>
                 <fieldset>
-                  <legend className="fieldset-label">Project ID</legend>
+                  <legend className="fieldset-legend">Project ID</legend>
                   <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                     <input
                       type="text"
@@ -258,7 +260,7 @@ function TaskEditPageContent() {
                   </label>
                 </fieldset>
                 <fieldset>
-                  <legend className="fieldset-label">Bearer Token</legend>
+                  <legend className="fieldset-legend">Bearer Token</legend>
                   <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                     <input
                       type="text"
@@ -274,12 +276,14 @@ function TaskEditPageContent() {
           </div>
 
           {/* Save */}
-          <button
-            className="btn btn-primary btn-sm text-gray-100 px-8 w-20"
-            onClick={handleSave}
-          >
-            <FontAwesomeIcon icon={faSave} width={12} /> Save
-          </button>
+          <div className="w-full flex">
+            <button
+              className="btn btn-primary btn-sm text-gray-100 px-8 w-20"
+              onClick={handleSave}
+            >
+              <FontAwesomeIcon icon={faSave} width={12} /> Save
+            </button>
+          </div>
         </div>
       </div>
     </div>

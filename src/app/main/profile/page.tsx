@@ -72,7 +72,7 @@ export default function LogoutPage() {
 
   return (
     <div>
-      <div className="flex justify-between px-2 py-4">
+      <div className="flex justify-between py-4">
         <p className="text-lg font-medium text-base-content">
           Profile
         </p>
@@ -90,7 +90,7 @@ export default function LogoutPage() {
           >
             <div className="flex flex-col gap-2">
               <fieldset>
-                <legend className="fieldset-label">New Password <span className="text-red-600">*</span></legend>
+                <legend className="fieldset-legend">New Password <span className="text-red-600">*</span></legend>
                 <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                   <input
                     type={showNewPassword ? "text" : "password"}
@@ -115,7 +115,7 @@ export default function LogoutPage() {
                 )}
               </fieldset>
               <fieldset>
-                <legend className="fieldset-label">New Password Confirm <span className="text-red-600">*</span></legend>
+                <legend className="fieldset-legend">New Password Confirm <span className="text-red-600">*</span></legend>
                 <label className="input input-sm input-bordered flex items-center gap-2 w-60">
                   <input
                     type={showConfirmPassword ? "text" : "password"}

@@ -136,7 +136,7 @@ export default function TaskPage() {
 
   return (
     <div>
-      <div className="flex justify-between px-2 py-4">
+      <div className="flex justify-between py-4">
         <p className="text-lg font-medium text-base-content/80">
           Tasks
         </p>
