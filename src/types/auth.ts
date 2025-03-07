@@ -20,3 +20,8 @@ export interface Token {
   access_token: string
   token_type: string
 }
+
+
+export interface ChangePasswordRequest {
+  new_password: string
+}
