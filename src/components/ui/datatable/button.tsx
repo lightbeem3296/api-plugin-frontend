@@ -10,7 +10,7 @@ interface ButtonProps {
 export function NewButton({ onClick, children }: ButtonProps) {
   return (
     <button
-      className="btn btn-primary btn-sm text-gray-100"
+      className="btn btn-info btn-sm text-gray-100"
       onClick={onClick}
     >
       <FontAwesomeIcon icon={faPlus} width={12} />{children}
