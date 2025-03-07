@@ -2,6 +2,7 @@
 
 import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { axiosHelper } from "@/lib/axios";
+import { loadCurrentUser } from "@/services/authService";
 import { ApiGeneralResponse } from "@/types/api";
 import { FetchDataType, fetchDataTypeCodes, fetchDataTypeMap, FetchMethod, fetchMethodCodes, fetchMethodMap, FetchTokenType, fetchTokenTypeCodes, fetchTokenTypeMap, TaskConfig, TaskEditPageMode } from "@/types/task";
 import { lookupValue } from "@/utils/record";
@@ -17,32 +18,34 @@ function TaskEditPageContent() {
   const modeFromParams = searchParams?.get("mode");
   const pageMode = Object.values(TaskEditPageMode).includes(modeFromParams as TaskEditPageMode) ? modeFromParams : TaskEditPageMode.EDIT;
   const taskID = searchParams?.get("id");
+  const currentUser = loadCurrentUser();
   const [loading, setLoading] = useState(false);
 
+
   const [task, setTask] = useState<TaskConfig>({
-    user_id: "string",
-    task_name: "string",
-    description: "string",
+    user_id: currentUser?._id || null,
+    task_name: "New task",
+    description: "This is a new task",
     fetch_config: {
       method: FetchMethod.GET,
-      url: "string",
+      url: "https://target.api.com/api/v1/endpoint",
       auth_token: {
         type: FetchTokenType.HEADER_TOKEN,
         token: {
-          additionalProp1: "string",
-          additionalProp2: "string",
-          additionalProp3: "string"
+          key1: "value1",
+          key2: "value2",
+          key3: "value3",
         }
       },
       data_type: FetchDataType.JSON,
       success_code: 200
     },
     enigx_config: {
-      tenant_id: "string",
-      project_id: "string",
-      bearer_token: "string"
+      tenant_id: "tenant-id",
+      project_id: "project-id",
+      bearer_token: "brearer-token",
     },
-    interval_secs: 0,
+    interval_secs: 60,
   });
 
   const fetchTask = async () => {

@@ -52,7 +52,7 @@ export interface FetchConfig {
 }
 
 export interface TaskConfig {
-  user_id: string;
+  user_id: string | null;
   task_name: string;
   description: string;
   fetch_config: FetchConfig;
