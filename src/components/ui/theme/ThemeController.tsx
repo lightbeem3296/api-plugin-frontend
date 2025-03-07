@@ -16,6 +16,7 @@ export default function ThemeController() {
 
   const handleChangeTheme = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTheme(event.target.checked ? "dark" : "light");
+    window.location.reload();
   }
 
   return (
