@@ -98,7 +98,8 @@ export default function TaskPage() {
     {
       headerName: "Next Run Time",
       field: "next_run_time",
-      width: 160,
+      width: 180,
+      cellRenderer: (params: any) => params.value ? new Date(params.value).toLocaleString() : "-", // eslint-disable-line
     },
     {
       headerName: "Actions",
