@@ -7,7 +7,7 @@ export default function MainPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/main/dashboard');
+    router.push('/main/tasks');
   }, [router]);
 
   return null;

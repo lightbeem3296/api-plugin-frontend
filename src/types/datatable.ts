@@ -4,10 +4,11 @@ export interface ActionCellRenderParams<TRowData> extends CustomCellRendererProp
   onSave?: (obj: TRowData) => void;
   onDelete?: (obj: TRowData) => void;
   onEdit?: (obj: TRowData) => void;
+  onRun?: (obj: TRowData) => void;
 }
 
 export interface TaskRowData {
-  _id: string;
+  _id: string | null;
   task_name: string;
   description: string;
   is_scheduled: boolean;

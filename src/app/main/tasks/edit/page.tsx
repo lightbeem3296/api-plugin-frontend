@@ -6,7 +6,7 @@ import { loadCurrentUser } from "@/services/authService";
 import { ApiGeneralResponse } from "@/types/api";
 import { FetchDataType, fetchDataTypeCodes, fetchDataTypeMap, FetchMethod, fetchMethodCodes, fetchMethodMap, FetchTokenType, fetchTokenTypeCodes, fetchTokenTypeMap, TaskConfig, TaskEditPageMode } from "@/types/task";
 import { lookupValue } from "@/utils/record";
-import { faArrowLeft, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faPlay, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -49,7 +49,7 @@ function TaskEditPageContent() {
   });
 
   const fetchTask = async () => {
-    const response = await axiosHelper.get<TaskConfig>(`/task/get/${taskID}`);
+    const response = await axiosHelper.get<TaskConfig>(`/task-config/get/${taskID}`);
     if (response) {
       setTask(response);
     }
@@ -58,6 +58,10 @@ function TaskEditPageContent() {
   // UI Handlers
   const handleClickBack = () => {
     router.push("/main/tasks");
+  }
+
+  const handleClickRun = () => {
+    router.push("/main/tasks/run?id=" + taskID);
   }
 
   const handleChangeFetchMethod = (value: string) => {
@@ -164,7 +168,7 @@ function TaskEditPageContent() {
     setLoading(true);
     try {
       if (pageMode === TaskEditPageMode.CREATE) {
-        const response = await axiosHelper.post<TaskConfig, ApiGeneralResponse>(`/task/create`, task, undefined);
+        const response = await axiosHelper.post<TaskConfig, ApiGeneralResponse>(`/task-config/create`, task, undefined);
         if (response) {
           customAlert({
             type: CustomAlertType.SUCCESS,
@@ -173,7 +177,7 @@ function TaskEditPageContent() {
           router.push("/main/tasks");
         }
       } else if (pageMode === TaskEditPageMode.EDIT) {
-        const response = await axiosHelper.put<TaskConfig, ApiGeneralResponse>(`/task/update/${taskID}`, task);
+        const response = await axiosHelper.put<TaskConfig, ApiGeneralResponse>(`/task-config/update/${taskID}`, task);
         if (response) {
           customAlert({
             type: CustomAlertType.SUCCESS,
@@ -217,6 +221,12 @@ function TaskEditPageContent() {
             onClick={() => handleClickBack()}
           >
             <FontAwesomeIcon icon={faArrowLeft} width={12} /> Back to Tasks
+          </button>
+          <button
+            className="btn btn-info btn-sm text-gray-100"
+            onClick={() => handleClickRun()}
+          >
+            <FontAwesomeIcon icon={faPlay} width={12} /> Run
           </button>
         </div>
       </div>

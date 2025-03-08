@@ -61,7 +61,7 @@ export interface TaskConfig {
 }
 
 export interface TaskConfigRead extends TaskConfig {
-  _id: string;
+  _id: string | null;
 
   is_scheduled: boolean;
   next_run_time: string | null;

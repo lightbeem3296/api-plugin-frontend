@@ -1,7 +1,7 @@
 'use client';
 
 import { customAlert, CustomAlertType } from "@/components/ui/alert";
-import { DeleteButton, EditButton, NewButton } from "@/components/ui/datatable/button";
+import { DeleteButton, EditButton, NewButton, RunButton } from "@/components/ui/datatable/button";
 import { myTheme } from "@/components/ui/theme/agGrid";
 import { axiosHelper } from "@/lib/axios";
 import { ApiGeneralResponse } from "@/types/api";
@@ -30,10 +30,14 @@ export default function TaskPage() {
     router.push(`/main/tasks/edit?mode=${TaskEditPageMode.EDIT}&id=${obj._id}`);
   }
 
+  const onRun = async (obj: TaskRowData) => {
+    router.push(`/main/tasks/run?id=${obj._id}`);
+  }
+
   // CRUD Functions
   const fetchRowData = async () => {
-    const response = await axiosHelper.get<TaskConfigRead[]>("/task/list");
-    if (response) {
+    const response = await axiosHelper.get<TaskConfigRead[]>("/task-config/list");
+    if (response !== undefined) {
       const objList = [];
 
       for (let i = 0; i < response.length; i++) {
@@ -47,7 +51,7 @@ export default function TaskPage() {
 
   const onDelete = async (obj: TaskRowData) => {
     let needRedraw = true;
-    const response = await axiosHelper.delete<ApiGeneralResponse>(`/task/delete/${obj._id}`);
+    const response = await axiosHelper.delete<ApiGeneralResponse>(`/task-config/delete/${obj._id}`);
     if (response) {
       customAlert({
         type: CustomAlertType.SUCCESS,
@@ -94,25 +98,28 @@ export default function TaskPage() {
     {
       headerName: "Next Run Time",
       field: "next_run_time",
-      width: 160,
+      width: 180,
+      cellRenderer: (params: any) => params.value ? new Date(params.value).toLocaleString() : "-", // eslint-disable-line
     },
     {
       headerName: "Actions",
       field: "actions",
-      width: 120,
+      width: 140,
       pinned: "right",
       filter: false,
       editable: false,
       sortable: false,
       cellRenderer: (params: ActionCellRenderParams<TaskRowData>) => (
         <div className="h-full flex items-center gap-1">
-          <EditButton onClick={() => params.onEdit ? params.onEdit(params.data) : alert("click")} />
-          <DeleteButton onClick={() => params.onDelete ? params.onDelete(params.data) : alert("click")} />
+          <RunButton onClick={() => params.onRun ? params.onRun(params.data) : alert("Run action")} />
+          <EditButton onClick={() => params.onEdit ? params.onEdit(params.data) : alert("Edit action")} />
+          <DeleteButton onClick={() => params.onDelete ? params.onDelete(params.data) : alert("Delete action")} />
         </div>
       ),
       cellRendererParams: {
         onEdit: onEdit,
         onDelete: onDelete,
+        onRun: onRun,
       },
     },
   ]);

@@ -1,7 +1,7 @@
 'use client'
 
 import { loadCurrentUser } from '@/services/authService';
-import { faDashboard, faSignOut, faTasks, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faSignOut, faTasks, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import ThemeController from '../ui/theme/ThemeController';
@@ -24,11 +24,6 @@ export default function Navbar() {
           <ul
             tabIndex={0}
             className="menu dropdown-content bg-base-200 rounded-box z-[10] w-52 p-2 shadow">
-            <li>
-              <Link href="/main/dashboard">
-                <FontAwesomeIcon icon={faDashboard} width={12} /> Dashboard
-              </Link>
-            </li>
             <li>
               <Link href="/main/tasks">
                 <FontAwesomeIcon icon={faTasks} width={12} /> Tasks
