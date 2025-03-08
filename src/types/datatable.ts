@@ -8,7 +8,7 @@ export interface ActionCellRenderParams<TRowData> extends CustomCellRendererProp
 }
 
 export interface TaskRowData {
-  _id: string;
+  _id: string | null;
   task_name: string;
   description: string;
   is_scheduled: boolean;

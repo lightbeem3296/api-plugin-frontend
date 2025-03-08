@@ -49,7 +49,7 @@ function TaskEditPageContent() {
   });
 
   const fetchTask = async () => {
-    const response = await axiosHelper.get<TaskConfig>(`/task/get/${taskID}`);
+    const response = await axiosHelper.get<TaskConfig>(`/task-config/get/${taskID}`);
     if (response) {
       setTask(response);
     }
@@ -168,7 +168,7 @@ function TaskEditPageContent() {
     setLoading(true);
     try {
       if (pageMode === TaskEditPageMode.CREATE) {
-        const response = await axiosHelper.post<TaskConfig, ApiGeneralResponse>(`/task/create`, task, undefined);
+        const response = await axiosHelper.post<TaskConfig, ApiGeneralResponse>(`/task-config/create`, task, undefined);
         if (response) {
           customAlert({
             type: CustomAlertType.SUCCESS,
@@ -177,7 +177,7 @@ function TaskEditPageContent() {
           router.push("/main/tasks");
         }
       } else if (pageMode === TaskEditPageMode.EDIT) {
-        const response = await axiosHelper.put<TaskConfig, ApiGeneralResponse>(`/task/update/${taskID}`, task);
+        const response = await axiosHelper.put<TaskConfig, ApiGeneralResponse>(`/task-config/update/${taskID}`, task);
         if (response) {
           customAlert({
             type: CustomAlertType.SUCCESS,

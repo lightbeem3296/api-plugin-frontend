@@ -36,7 +36,7 @@ export default function TaskPage() {
 
   // CRUD Functions
   const fetchRowData = async () => {
-    const response = await axiosHelper.get<TaskConfigRead[]>("/task/list");
+    const response = await axiosHelper.get<TaskConfigRead[]>("/task-config/list");
     if (response) {
       const objList = [];
 
@@ -51,7 +51,7 @@ export default function TaskPage() {
 
   const onDelete = async (obj: TaskRowData) => {
     let needRedraw = true;
-    const response = await axiosHelper.delete<ApiGeneralResponse>(`/task/delete/${obj._id}`);
+    const response = await axiosHelper.delete<ApiGeneralResponse>(`/task-config/delete/${obj._id}`);
     if (response) {
       customAlert({
         type: CustomAlertType.SUCCESS,
