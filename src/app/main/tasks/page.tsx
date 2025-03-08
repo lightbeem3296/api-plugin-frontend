@@ -37,7 +37,7 @@ export default function TaskPage() {
   // CRUD Functions
   const fetchRowData = async () => {
     const response = await axiosHelper.get<TaskConfigRead[]>("/task-config/list");
-    if (response) {
+    if (response !== undefined) {
       const objList = [];
 
       for (let i = 0; i < response.length; i++) {
