@@ -84,7 +84,7 @@ export default function LoginPage() {
       >
         <div className="flex justify-center mb-8">
           <span className="font-sans font-medium text-xl">
-            Login to Dashboard
+            Login to TH-ENIGX
           </span>
         </div>
 
