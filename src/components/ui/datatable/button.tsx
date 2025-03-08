@@ -56,7 +56,7 @@ export function DeleteButton({ disabled = false, onClick }: ButtonProps) {
 export function RunButton({ disabled = false, onClick }: ButtonProps) {
   return (
     <button
-      className="btn btn-primary btn-sm"
+      className="btn btn-primary btn-sm btn-outline"
       disabled={disabled}
       onClick={onClick}
     >

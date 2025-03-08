@@ -81,8 +81,6 @@ export default function TaskRunPage() {
 
   const handleChangeSchedule = async (isScheduled: boolean) => {
     try {
-      setLoading(true);
-
       let response = null;
       let successMessage = "";
       if (isScheduled) {
@@ -93,12 +91,12 @@ export default function TaskRunPage() {
         successMessage = "The task is unscheduled successfully.";
       }
       if (response) {
-        setTask({ ...task, is_scheduled: isScheduled });
         customAlert({
           type: CustomAlertType.SUCCESS,
           title: "Success",
           message: successMessage
         });
+        fetchTask();
       }
     } catch {
       customAlert({
@@ -106,8 +104,6 @@ export default function TaskRunPage() {
         title: "Error",
         message: "Scheduling operation failed"
       });
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -137,28 +133,60 @@ export default function TaskRunPage() {
           </button>
         </div>
       </div>
-      <div className="h-fit min-h-[calc(100vh-11.4rem)]">
-        <label className="fieldset-label">
-          <input
-            type="checkbox"
-            className="toggle toggle-info"
-            checked={task.is_scheduled}
+      <div className="flex flex-col gap-4 w-full h-fit min-h-[calc(100vh-11.4rem)]">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button
+            className="btn btn-info btn-sm text-gray-100 w-30"
             disabled={loading}
-            onChange={(e) => handleChangeSchedule(e.target.checked)}
-          />
-          Schedule
-        </label>
-        <button
-          className="btn btn-info btn-sm text-gray-100"
-          disabled={loading}
-          onClick={() => handleClickRun()}
-        >
-          {loading
-            ? <span className="loading loading-spinner loading-xs"></span>
-            : <FontAwesomeIcon icon={faPlay} width={12} />}
-          Run
-        </button>
+            onClick={() => handleClickRun()}
+          >
+            {loading
+              ? <span className="loading loading-spinner loading-xs"></span>
+              : <FontAwesomeIcon icon={faPlay} width={12} />}
+            Run
+          </button>
+          <label className="fieldset-label">
+            <input
+              type="checkbox"
+              className="toggle toggle-info"
+              checked={task.is_scheduled}
+              disabled={loading}
+              onChange={(e) => handleChangeSchedule(e.target.checked)}
+            />
+            Schedule Task (Every {task.interval_secs} seconds)
+          </label>
+        </div>
+        <div className="w-full overflow-auto">
+          <table className="table table-md w-full min-w-xl">
+            <tbody>
+              <tr>
+                <td>Task Name</td>
+                <td>{task.task_name}</td>
+              </tr>
+              <tr>
+                <td>Description</td>
+                <td>{task.description}</td>
+              </tr>
+              <tr>
+                <td>API Link</td>
+                <td>{task.fetch_config.url}</td>
+              </tr>
+              <tr>
+                <td>Tenant ID</td>
+                <td>{task.enigx_config.tenant_id}</td>
+              </tr>
+              <tr>
+                <td>Project ID</td>
+                <td>{task.enigx_config.project_id}</td>
+              </tr>
+              <tr>
+                <td>Next Run Time</td>
+                <td>{task.next_run_time ? new Date(task.next_run_time).toLocaleString() : "-"}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </div >
   )
 }
