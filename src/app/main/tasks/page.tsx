@@ -55,7 +55,7 @@ export default function TaskPage() {
     if (response) {
       customAlert({
         type: CustomAlertType.SUCCESS,
-        message: "Deleted successfully.",
+        message: "Deleted successfully",
       });
     } else {
       needRedraw = false;

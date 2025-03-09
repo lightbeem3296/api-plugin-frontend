@@ -13,11 +13,13 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 interface ChangePasswordFormData {
+  old_password: string;
   new_password: string;
   conf_password: string;
 }
 
 const changePasswordSchema = yup.object().shape({
+  old_password: yup.string().required("Old password is required"),
   new_password: yup.string().required("New password is required"),
   conf_password: yup.string().required("Please confirm your new password").oneOf([yup.ref("new_password")], "Passwords do not match"),
 });
@@ -33,9 +35,13 @@ export default function LogoutPage() {
     resolver: yupResolver(changePasswordSchema),
   })
   const [loadingChangePassword, setLoadingChangePassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
+  const handleClickShowOldPassword = () => {
+    setShowOldPassword(!showOldPassword);
+  }
   const handleClickShowNewPassword = () => {
     setShowNewPassword(!showNewPassword);
   }
@@ -47,16 +53,26 @@ export default function LogoutPage() {
   const onSubmitChangePassword = async (data: ChangePasswordFormData) => {
     setLoadingChangePassword(true);
     try {
-      const response = await axiosHelper.post<ChangePasswordRequest, ApiGeneralResponse>("/user/change-password", data, {
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axiosHelper.post<ChangePasswordRequest, ApiGeneralResponse>("/user/change-password", data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        },
+        {
+          title: {
+            403: "Failed change password",
+          },
+          message: {
+            403: "Old password is incorrect",
+          }
         }
-      });
+      );
       if (response) {
         customAlert({
           type: CustomAlertType.SUCCESS,
           title: "Password is changed",
-          message: "Password is successfully changed. You can now login with your new password.",
+          message: "Password is successfully changed. You can now login with your new password",
         });
       }
     } catch (error: any) { // eslint-disable-line
@@ -89,6 +105,31 @@ export default function LogoutPage() {
             className="col-span-2 ml-2"
           >
             <div className="flex flex-col gap-2">
+              <fieldset>
+                <legend className="fieldset-legend">Old Password <span className="text-red-600">*</span></legend>
+                <label className="input input-sm input-bordered flex items-center gap-2 w-60">
+                  <input
+                    type={showOldPassword ? "text" : "password"}
+                    id="old_password"
+                    className="grow"
+                    placeholder="******"
+                    disabled={loadingChangePassword}
+                    {...registerChangePassword("old_password", { required: "Old password is required" })}
+                  />
+                  <button
+                    type="button"
+                    className={!watchChangePassword("old_password") ? "hidden" : ""}
+                    onClick={() => handleClickShowOldPassword()}
+                  >
+                    {showOldPassword
+                      ? <FontAwesomeIcon icon={faEyeSlash} width={12} />
+                      : <FontAwesomeIcon icon={faEye} width={12} />}
+                  </button>
+                </label>
+                {errors.old_password && (
+                  <p className="text-red-500 text-sm mt-1">{errors.old_password.message}</p>
+                )}
+              </fieldset>
               <fieldset>
                 <legend className="fieldset-legend">New Password <span className="text-red-600">*</span></legend>
                 <label className="input input-sm input-bordered flex items-center gap-2 w-60">

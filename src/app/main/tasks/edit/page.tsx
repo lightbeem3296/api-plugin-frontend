@@ -172,7 +172,7 @@ function TaskEditPageContent() {
         if (response) {
           customAlert({
             type: CustomAlertType.SUCCESS,
-            message: "Created successfully.",
+            message: "Created successfully",
           });
           router.push("/main/tasks");
         }
@@ -181,7 +181,7 @@ function TaskEditPageContent() {
         if (response) {
           customAlert({
             type: CustomAlertType.SUCCESS,
-            message: "Updated successfully.",
+            message: "Updated successfully",
           });
         }
       } else {
