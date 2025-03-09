@@ -57,7 +57,7 @@ export default function RegisterPage() {
       customAlert({
         type: CustomAlertType.SUCCESS,
         title: "Registration success",
-        message: "User registered successfully. Login with registered user.",
+        message: "User registered successfully. Login with registered user",
       });
       router.push("/auth/login");
     } catch (error: any) { // eslint-disable-line

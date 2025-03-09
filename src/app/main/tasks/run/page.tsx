@@ -71,7 +71,7 @@ export default function TaskRunPage() {
         customAlert({
           type: CustomAlertType.SUCCESS,
           title: "Success",
-          message: "Task is completed successfully.",
+          message: "Task is completed successfully",
         });
       }
     } finally {
@@ -85,10 +85,10 @@ export default function TaskRunPage() {
       let successMessage = "";
       if (isScheduled) {
         response = await axiosHelper.get<ApiGeneralResponse>("/scheduler/create/" + taskID);
-        successMessage = "The task is scheduled successfully.";
+        successMessage = "The task is scheduled successfully";
       } else {
         response = await axiosHelper.delete<ApiGeneralResponse>("/scheduler/delete/" + taskID);
-        successMessage = "The task is unscheduled successfully.";
+        successMessage = "The task is unscheduled successfully";
       }
       if (response) {
         customAlert({

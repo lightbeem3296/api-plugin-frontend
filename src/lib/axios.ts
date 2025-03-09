@@ -1,6 +1,11 @@
 import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
+interface AlertOverride {
+  title?: Record<number, string>;
+  message?: Record<number, string>;
+}
+
 export class AxiosHelper {
   private axiosInstance: AxiosInstance;
 
@@ -26,12 +31,13 @@ export class AxiosHelper {
   async get<T>(
     endpoint: string,
     config?: AxiosRequestConfig,
+    alertOverride?: AlertOverride,
   ): Promise<T | undefined> {
     try {
       const response = await this.axiosInstance.get<T>(endpoint, config);
       return response.data;
     } catch (error: unknown) {
-      await this.handleError(error);
+      await this.handleError(error, alertOverride);
     }
   }
 
@@ -40,6 +46,7 @@ export class AxiosHelper {
     endpoint: string,
     data: T,
     config?: AxiosRequestConfig,
+    alertOverride?: AlertOverride,
   ): Promise<R | undefined> {
     try {
       const response = await this.axiosInstance.post<R>(
@@ -49,7 +56,7 @@ export class AxiosHelper {
       );
       return response.data;
     } catch (error: unknown) {
-      await this.handleError(error);
+      await this.handleError(error, alertOverride);
     }
   }
 
@@ -130,16 +137,14 @@ export class AxiosHelper {
   }
 
   // Centralized error handler
-  private async handleError(error: unknown) {
+  private async handleError(error: unknown, alertOverride?: AlertOverride) {
     if (axios.isAxiosError(error)) {
-      // console.error("Axios error:", error.response?.data || error.message);
-      if (error.response?.status === 422) {
+      if (error.response?.status === 422) { // Unprocessable Entity
         let details = undefined;
 
         const data = error.response.data;
         if (data instanceof Blob) {
           const jsonData = JSON.parse(await data.text());
-          console.log(jsonData);
           details = Array.isArray(jsonData.detail)
             ? jsonData.detail
             : undefined;
@@ -179,16 +184,39 @@ export class AxiosHelper {
           message: message,
           detail: alertDetail,
         });
-      } else if (error.response?.status === 401) {
+      } else if (error.response?.status === 401) { // Unauthorized
         window.location.href = "/auth/login";
-      } else if (error.response?.status === 400) {
-        console.log(error.response?.data.detail);
+      } else if (error.response?.status === 400) { // Bad Request
         customAlert({
           type: CustomAlertType.ERROR,
-          title: "Error",
-          message: error.response?.data.detail,
+          title: alertOverride?.title?.[400] || "Bad Request",
+          message: alertOverride?.message?.[400] || error.response?.data.detail,
         });
-      } else {
+      } else if (error.response?.status === 403) { // Forbidden
+        customAlert({
+          type: CustomAlertType.ERROR,
+          title: alertOverride?.title?.[403] || "Forbidden",
+          message: alertOverride?.message?.[403] || error.response?.data.detail,
+        });
+      } else if (error.response?.status === 404) { // Not Found
+        customAlert({
+          type: CustomAlertType.ERROR,
+          title: alertOverride?.title?.[404] || "Not Found",
+          message: alertOverride?.message?.[404] || error.response?.data.detail,
+        });
+      } else if (error.response?.status === 409) { // Conflict
+        customAlert({
+          type: CustomAlertType.ERROR,
+          title: alertOverride?.title?.[409] || "Conflict",
+          message: alertOverride?.message?.[409] || error.response?.data.detail,
+        });
+      } else if (error.response?.status === 500) { // Internal Server Error
+        customAlert({
+          type: CustomAlertType.ERROR,
+          title: alertOverride?.title?.[500] || "Internal Server Error",
+          message: alertOverride?.message?.[500] || error.response?.data.detail,
+        });
+      } else { // Other
         customAlert({
           type: CustomAlertType.ERROR,
           title: "Axios Error",
@@ -200,7 +228,7 @@ export class AxiosHelper {
       customAlert({
         type: CustomAlertType.ERROR,
         title: "Unexpected Error",
-        message: "An unexpected error occurred. Please try again.",
+        message: "An unexpected error occurred. Please try again",
       });
     }
   }
