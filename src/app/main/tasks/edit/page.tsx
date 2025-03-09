@@ -6,7 +6,7 @@ import { loadCurrentUser } from "@/services/authService";
 import { ApiGeneralResponse } from "@/types/api";
 import { FetchDataType, fetchDataTypeCodes, fetchDataTypeMap, FetchMethod, fetchMethodCodes, fetchMethodMap, FetchTokenType, fetchTokenTypeCodes, fetchTokenTypeMap, TaskConfig, TaskEditPageMode } from "@/types/task";
 import { lookupValue } from "@/utils/record";
-import { faArrowLeft, faPlay, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faEye, faEyeSlash, faPlay, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -19,9 +19,9 @@ function TaskEditPageContent() {
   const pageMode = Object.values(TaskEditPageMode).includes(modeFromParams as TaskEditPageMode) ? modeFromParams : TaskEditPageMode.EDIT;
   const taskID = searchParams?.get("id");
   const currentUser = loadCurrentUser();
+  const [showBearerToken, setShowBearerToken] = useState(false);
+  const [showToken, setShowToken] = useState<boolean[]>([]);
   const [loading, setLoading] = useState(false);
-
-
   const [task, setTask] = useState<TaskConfig>({
     user_id: currentUser?._id || null,
     task_name: "New task",
@@ -52,6 +52,8 @@ function TaskEditPageContent() {
     const response = await axiosHelper.get<TaskConfig>(`/task-config/get/${taskID}`);
     if (response) {
       setTask(response);
+      const tokenLength = Object.entries(response.fetch_config.auth_token.token).length;
+      setShowToken(Array<boolean>(tokenLength).fill(false));
     }
   }
 
@@ -106,11 +108,28 @@ function TaskEditPageContent() {
           ...task.fetch_config.auth_token,
           token: {
             ...task.fetch_config.auth_token.token,
-            [`additionalProp${Object.keys(task.fetch_config.auth_token.token).length + 1}`]: "string"
+            [`additionalProp${Object.keys(task.fetch_config.auth_token.token).length + 1}`]: `value${Object.keys(task.fetch_config.auth_token.token).length + 1}`
           }
         }
       }
     });
+    setShowToken([...showToken, false]);
+  }
+
+  const handleDeleteToken = (index: number) => {
+    setTask({
+      ...task,
+      fetch_config: {
+        ...task.fetch_config,
+        auth_token: {
+          ...task.fetch_config.auth_token,
+          token: Object.fromEntries(
+            Object.entries(task.fetch_config.auth_token.token).filter((_, i) => i !== index)
+          )
+        }
+      }
+    });
+    setShowToken(showToken.filter((_, i) => i !== index));
   }
 
   const handleChangeTokenKey = (index: number, value: string) => {
@@ -143,21 +162,6 @@ function TaskEditPageContent() {
               i === index
                 ? [key, value]
                 : [key, val])
-          )
-        }
-      }
-    });
-  }
-
-  const handleDeleteToken = (index: number) => {
-    setTask({
-      ...task,
-      fetch_config: {
-        ...task.fetch_config,
-        auth_token: {
-          ...task.fetch_config.auth_token,
-          token: Object.fromEntries(
-            Object.entries(task.fetch_config.auth_token.token).filter((_, i) => i !== index)
           )
         }
       }
@@ -222,12 +226,16 @@ function TaskEditPageContent() {
           >
             <FontAwesomeIcon icon={faArrowLeft} width={12} /> Back to Tasks
           </button>
-          <button
-            className="btn btn-info btn-sm text-gray-100"
-            onClick={() => handleClickRun()}
-          >
-            <FontAwesomeIcon icon={faPlay} width={12} /> Run
-          </button>
+          {
+            pageMode === TaskEditPageMode.CREATE
+              ? null
+              : <button
+                className="btn btn-info btn-sm text-gray-100"
+                onClick={() => handleClickRun()}
+              >
+                <FontAwesomeIcon icon={faPlay} width={12} /> Run
+              </button>
+          }
         </div>
       </div>
       <div className="h-fit min-h-[calc(100vh-11.4rem)]">
@@ -363,13 +371,24 @@ function TaskEditPageContent() {
                           value={key}
                           onChange={(e) => handleChangeTokenKey(index, e.target.value)}
                         />
-                        <input
-                          type="text"
-                          className="input input-sm col-span-3 w-full"
-                          disabled={loading}
-                          value={value}
-                          onChange={(e) => handleChangeTokenValue(index, e.target.value)}
-                        />
+                        <label className="input input-sm col-span-3 w-full">
+                          <input
+                            type={showToken[index] ? "text" : "password"}
+                            className="grow"
+                            disabled={loading}
+                            value={value}
+                            onChange={(e) => handleChangeTokenValue(index, e.target.value)}
+                          />
+                          <button
+                            type="button"
+                            className={value ? "isible" : "hidden"}
+                            onClick={() => setShowToken({ ...showToken, [index]: !showToken[index] })}
+                          >
+                            {showToken[index]
+                              ? <FontAwesomeIcon icon={faEyeSlash} width={12} />
+                              : <FontAwesomeIcon icon={faEye} width={12} />}
+                          </button>
+                        </label>
                         <button
                           className="btn btn-sm col-span-1 btn-error btn-outline"
                           onClick={() => handleDeleteToken(index)}
@@ -410,13 +429,24 @@ function TaskEditPageContent() {
                 </fieldset>
                 <fieldset>
                   <legend className="fieldset-legend">Bearer Token</legend>
-                  <input
-                    type="text"
-                    className="input input-sm w-60"
-                    disabled={loading}
-                    value={task.enigx_config.bearer_token}
-                    onChange={(e) => setTask({ ...task, enigx_config: { ...task.enigx_config, bearer_token: e.target.value } })}
-                  />
+                  <label className="input input-sm flex items-center gap-2 w-60">
+                    <input
+                      type={showBearerToken ? "text" : "password"}
+                      className="grow"
+                      disabled={loading}
+                      value={task.enigx_config.bearer_token}
+                      onChange={(e) => setTask({ ...task, enigx_config: { ...task.enigx_config, bearer_token: e.target.value } })}
+                    />
+                    <button
+                      type="button"
+                      className={task.enigx_config.bearer_token ? "" : "hidden"}
+                      onClick={() => setShowBearerToken(!showBearerToken)}
+                    >
+                      {showBearerToken
+                        ? <FontAwesomeIcon icon={faEyeSlash} width={12} />
+                        : <FontAwesomeIcon icon={faEye} width={12} />}
+                    </button>
+                  </label>
                 </fieldset>
               </div>
             </div>
