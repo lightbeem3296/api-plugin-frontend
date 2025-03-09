@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*", // Match all requests to /api/<endpoint>
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL}/:path*`, // Forward to your backend URL
+        destination: `${process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL || "http://127.0.0.1:8000/api"}/:path*`, // Forward to your backend URL
       },
     ];
   },

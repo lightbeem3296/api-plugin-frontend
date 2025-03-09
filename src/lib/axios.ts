@@ -235,4 +235,4 @@ export class AxiosHelper {
 }
 
 // Instance
-export const axiosHelper = new AxiosHelper(process.env.NEXT_PUBLIC_FRONTEND_API_BASE_URL || "");
+export const axiosHelper = new AxiosHelper(process.env.NEXT_PUBLIC_FRONTEND_API_BASE_URL || "http://localhost:3000/api");
