@@ -222,12 +222,16 @@ function TaskEditPageContent() {
           >
             <FontAwesomeIcon icon={faArrowLeft} width={12} /> Back to Tasks
           </button>
-          <button
-            className="btn btn-info btn-sm text-gray-100"
-            onClick={() => handleClickRun()}
-          >
-            <FontAwesomeIcon icon={faPlay} width={12} /> Run
-          </button>
+          {
+            pageMode === TaskEditPageMode.CREATE
+              ? null
+              : <button
+                className="btn btn-info btn-sm text-gray-100"
+                onClick={() => handleClickRun()}
+              >
+                <FontAwesomeIcon icon={faPlay} width={12} /> Run
+              </button>
+          }
         </div>
       </div>
       <div className="h-fit min-h-[calc(100vh-11.4rem)]">
