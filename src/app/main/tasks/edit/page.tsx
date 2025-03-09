@@ -381,6 +381,7 @@ function TaskEditPageContent() {
                           />
                           <button
                             type="button"
+                            className={value ? "isible" : "hidden"}
                             onClick={() => setShowToken({ ...showToken, [index]: !showToken[index] })}
                           >
                             {showToken[index]
