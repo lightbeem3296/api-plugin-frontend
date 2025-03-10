@@ -32,9 +32,7 @@ function TaskEditPageContent() {
       auth_token: {
         type: FetchTokenType.HEADER_TOKEN,
         token: {
-          key1: "value1",
-          key2: "value2",
-          key3: "value3",
+          key: "value",
         }
       },
       data_type: FetchDataType.JSON,
@@ -43,7 +41,7 @@ function TaskEditPageContent() {
     enigx_config: {
       tenant_id: "tenant-id",
       project_id: "project-id",
-      bearer_token: "brearer-token",
+      bearer_token: "Bearer xxxxxxxxxxxxxxxx",
     },
     interval_secs: 60,
   });
