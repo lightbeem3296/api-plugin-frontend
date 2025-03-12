@@ -72,19 +72,19 @@ function TaskEditPageContent() {
       task_type: value as TaskType,
       fetch_config: {
         ...task.fetch_config,
-        method: value === TaskType.SPITZECO ? FetchMethod.GET : task.fetch_config.method,
-        url: value === TaskType.SPITZECO ? "https://api.spitzeco.dk/kb" : task.fetch_config.url,
+        method: value === TaskType.REZPONZA ? FetchMethod.GET : task.fetch_config.method,
+        url: value === TaskType.REZPONZA ? "https://api.spitzeco.dk/kb" : task.fetch_config.url,
         auth_token: {
           ...task.fetch_config.auth_token,
-          type: value === TaskType.SPITZECO ? FetchTokenType.HEADER_TOKEN : task.fetch_config.auth_token.type,
-          token: value === TaskType.SPITZECO
+          type: value === TaskType.REZPONZA ? FetchTokenType.HEADER_TOKEN : task.fetch_config.auth_token.type,
+          token: value === TaskType.REZPONZA
             ? { "ocp-apim-subscription-key": "" }
             : task.fetch_config.auth_token.token,
         },
-        data_type: value === TaskType.SPITZECO ? FetchDataType.JSON : task.fetch_config.data_type,
-        success_code: value === TaskType.SPITZECO ? 200 : task.fetch_config.success_code,
+        data_type: value === TaskType.REZPONZA ? FetchDataType.JSON : task.fetch_config.data_type,
+        success_code: value === TaskType.REZPONZA ? 200 : task.fetch_config.success_code,
       },
-      kwargs: value === TaskType.SPITZECO ? { "kbid": "" } : {}
+      kwargs: value === TaskType.REZPONZA ? { "kbid": "" } : {}
     });
 
   }

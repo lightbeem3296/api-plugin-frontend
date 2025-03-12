@@ -53,11 +53,11 @@ export interface FetchConfig {
 
 export enum TaskType {
   NORMAL = "normal",
-  SPITZECO = "spitzeco",
+  REZPONZA = "rezponza",
 }
 export const taskTypeMap: Record<string, string> = {
   "normal": "Normal",
-  "spitzeco": "Spitzeco",
+  "rezponza": "Rezponza",
 }
 export const taskTypeCodes = extractKeys(taskTypeMap);
 
