@@ -51,13 +51,25 @@ export interface FetchConfig {
   success_code: number;
 }
 
+export enum TaskType {
+  NORMAL = "normal",
+  REZPONZA = "rezponza",
+}
+export const taskTypeMap: Record<string, string> = {
+  "normal": "Normal",
+  "rezponza": "Rezponza",
+}
+export const taskTypeCodes = extractKeys(taskTypeMap);
+
 export interface TaskConfig {
   user_id: string | null;
   task_name: string;
+  task_type: TaskType,
   description: string;
   fetch_config: FetchConfig;
   enigx_config: EnigxConfig;
   interval_secs: number;
+  task_args: Record<string, string>;
 }
 
 export interface TaskConfigRead extends TaskConfig {

@@ -4,7 +4,8 @@ import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { axiosHelper } from "@/lib/axios";
 import { loadCurrentUser } from "@/services/authService";
 import { ApiGeneralResponse } from "@/types/api";
-import { FetchDataType, FetchMethod, FetchTokenType, TaskConfigRead } from "@/types/task";
+import { FetchDataType, FetchMethod, FetchTokenType, TaskConfigRead, TaskType, taskTypeMap } from "@/types/task";
+import { lookupValue } from "@/utils/record";
 import { faArrowLeft, faEdit, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,6 +23,7 @@ export default function TaskRunPage() {
     _id: null,
     user_id: currentUser?._id || null,
     task_name: "New task",
+    task_type: TaskType.NORMAL,
     description: "This is a new task",
     fetch_config: {
       method: FetchMethod.GET,
@@ -45,6 +47,7 @@ export default function TaskRunPage() {
     interval_secs: 60,
     next_run_time: null,
     is_scheduled: false,
+    task_args: {},
   });
 
   const fetchTask = async () => {
@@ -71,7 +74,7 @@ export default function TaskRunPage() {
         customAlert({
           type: CustomAlertType.SUCCESS,
           title: "Success",
-          message: "Task is completed successfully",
+          message: response.message,
         });
       }
     } finally {
@@ -162,6 +165,10 @@ export default function TaskRunPage() {
               <tr>
                 <td>Task Name</td>
                 <td>{task.task_name}</td>
+              </tr>
+              <tr>
+                <td>Task Type</td>
+                <td>{lookupValue(taskTypeMap, task.task_type)}</td>
               </tr>
               <tr>
                 <td>Description</td>
