@@ -47,6 +47,7 @@ export default function TaskRunPage() {
     interval_secs: 60,
     next_run_time: null,
     is_scheduled: false,
+    kwargs: {},
   });
 
   const fetchTask = async () => {

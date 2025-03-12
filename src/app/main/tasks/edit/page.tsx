@@ -45,6 +45,7 @@ function TaskEditPageContent() {
       bearer_token: "Bearer xxxxxxxxxxxxxxxx",
     },
     interval_secs: 60,
+    kwargs: {},
   });
 
   const fetchTask = async () => {
@@ -82,7 +83,8 @@ function TaskEditPageContent() {
         },
         data_type: value === TaskType.SPITZECO ? FetchDataType.JSON : task.fetch_config.data_type,
         success_code: value === TaskType.SPITZECO ? 200 : task.fetch_config.success_code,
-      }
+      },
+      kwargs: value === TaskType.SPITZECO ? { "kbid": "" } : {}
     });
 
   }
@@ -156,7 +158,19 @@ function TaskEditPageContent() {
     });
   }
 
-  const handleSaveToken = async () => {
+  const handleChangeKwargValue = (index: number, value: string) => {
+    setTask({
+      ...task,
+      kwargs: Object.fromEntries(
+        Object.entries(task.kwargs).map(([key, val], i) =>
+          i === index
+            ? [key, value]
+            : [key, val])
+      )
+    })
+  }
+
+  const handleSaveTaskConfig = async () => {
     setLoading(true);
     try {
       if (pageMode === TaskEditPageMode.CREATE) {
@@ -284,6 +298,21 @@ function TaskEditPageContent() {
                 ))}
               </select>
             </fieldset>
+            {Object.entries(task.kwargs).length > 0
+              ? Object.entries(task.kwargs).map(([key, value], index) => (
+                <fieldset key={key}>
+                  <legend className="fieldset-legend">{key}</legend>
+                  <input
+                    type="text"
+                    className="input input-sm"
+                    disabled={loading}
+                    value={value}
+                    onChange={(e) => handleChangeKwargValue(index, e.target.value)}
+                  />
+                </fieldset>
+              ))
+              : null
+            }
           </div>
 
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -461,14 +490,14 @@ function TaskEditPageContent() {
           <div className="w-full flex">
             <button
               className="btn btn-primary btn-sm text-gray-100 px-8 w-20"
-              onClick={handleSaveToken}
+              onClick={handleSaveTaskConfig}
             >
               <FontAwesomeIcon icon={faSave} width={12} /> Save
             </button>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }
 
