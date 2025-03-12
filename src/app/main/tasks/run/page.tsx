@@ -4,7 +4,7 @@ import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { axiosHelper } from "@/lib/axios";
 import { loadCurrentUser } from "@/services/authService";
 import { ApiGeneralResponse } from "@/types/api";
-import { FetchDataType, FetchMethod, FetchTokenType, TaskConfigRead } from "@/types/task";
+import { FetchDataType, FetchMethod, FetchTokenType, TaskConfigRead, TaskType } from "@/types/task";
 import { faArrowLeft, faEdit, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,6 +22,7 @@ export default function TaskRunPage() {
     _id: null,
     user_id: currentUser?._id || null,
     task_name: "New task",
+    task_type: TaskType.NORMAL,
     description: "This is a new task",
     fetch_config: {
       method: FetchMethod.GET,
