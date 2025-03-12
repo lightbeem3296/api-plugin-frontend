@@ -69,7 +69,7 @@ export interface TaskConfig {
   fetch_config: FetchConfig;
   enigx_config: EnigxConfig;
   interval_secs: number;
-  kwargs: Record<string, string>;
+  task_args: Record<string, string>;
 }
 
 export interface TaskConfigRead extends TaskConfig {

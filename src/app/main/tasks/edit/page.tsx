@@ -45,7 +45,7 @@ function TaskEditPageContent() {
       bearer_token: "Bearer xxxxxxxxxxxxxxxx",
     },
     interval_secs: 60,
-    kwargs: {},
+    task_args: {},
   });
 
   const fetchTask = async () => {
@@ -84,7 +84,7 @@ function TaskEditPageContent() {
         data_type: value === TaskType.REZPONZA ? FetchDataType.JSON : task.fetch_config.data_type,
         success_code: value === TaskType.REZPONZA ? 200 : task.fetch_config.success_code,
       },
-      kwargs: value === TaskType.REZPONZA ? { "kbid": "" } : {}
+      task_args: value === TaskType.REZPONZA ? { "kbid": "" } : {}
     });
 
   }
@@ -161,8 +161,8 @@ function TaskEditPageContent() {
   const handleChangeKwargValue = (index: number, value: string) => {
     setTask({
       ...task,
-      kwargs: Object.fromEntries(
-        Object.entries(task.kwargs).map(([key, val], i) =>
+      task_args: Object.fromEntries(
+        Object.entries(task.task_args).map(([key, val], i) =>
           i === index
             ? [key, value]
             : [key, val])
@@ -298,8 +298,8 @@ function TaskEditPageContent() {
                 ))}
               </select>
             </fieldset>
-            {Object.entries(task.kwargs).length > 0
-              ? Object.entries(task.kwargs).map(([key, value], index) => (
+            {Object.entries(task.task_args).length > 0
+              ? Object.entries(task.task_args).map(([key, value], index) => (
                 <fieldset key={key}>
                   <legend className="fieldset-legend">{key}</legend>
                   <input

@@ -47,7 +47,7 @@ export default function TaskRunPage() {
     interval_secs: 60,
     next_run_time: null,
     is_scheduled: false,
-    kwargs: {},
+    task_args: {},
   });
 
   const fetchTask = async () => {
@@ -74,7 +74,7 @@ export default function TaskRunPage() {
         customAlert({
           type: CustomAlertType.SUCCESS,
           title: "Success",
-          message: "Task is completed successfully",
+          message: response.message,
         });
       }
     } finally {
