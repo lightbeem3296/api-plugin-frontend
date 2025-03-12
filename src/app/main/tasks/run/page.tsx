@@ -4,7 +4,8 @@ import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { axiosHelper } from "@/lib/axios";
 import { loadCurrentUser } from "@/services/authService";
 import { ApiGeneralResponse } from "@/types/api";
-import { FetchDataType, FetchMethod, FetchTokenType, TaskConfigRead, TaskType } from "@/types/task";
+import { FetchDataType, FetchMethod, FetchTokenType, TaskConfigRead, TaskType, taskTypeMap } from "@/types/task";
+import { lookupValue } from "@/utils/record";
 import { faArrowLeft, faEdit, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -163,6 +164,10 @@ export default function TaskRunPage() {
               <tr>
                 <td>Task Name</td>
                 <td>{task.task_name}</td>
+              </tr>
+              <tr>
+                <td>Task Type</td>
+                <td>{lookupValue(taskTypeMap, task.task_type)}</td>
               </tr>
               <tr>
                 <td>Description</td>
