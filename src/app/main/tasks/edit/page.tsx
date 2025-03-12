@@ -4,7 +4,7 @@ import { customAlert, CustomAlertType } from "@/components/ui/alert";
 import { axiosHelper } from "@/lib/axios";
 import { loadCurrentUser } from "@/services/authService";
 import { ApiGeneralResponse } from "@/types/api";
-import { FetchDataType, fetchDataTypeCodes, fetchDataTypeMap, FetchMethod, fetchMethodCodes, fetchMethodMap, FetchTokenType, fetchTokenTypeCodes, fetchTokenTypeMap, TaskConfig, TaskEditPageMode } from "@/types/task";
+import { FetchDataType, fetchDataTypeCodes, fetchDataTypeMap, FetchMethod, fetchMethodCodes, fetchMethodMap, FetchTokenType, fetchTokenTypeCodes, fetchTokenTypeMap, TaskConfig, TaskEditPageMode, TaskType, taskTypeCodes, taskTypeMap } from "@/types/task";
 import { lookupValue } from "@/utils/record";
 import { faArrowLeft, faEye, faEyeSlash, faPlay, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,6 +25,7 @@ function TaskEditPageContent() {
   const [task, setTask] = useState<TaskConfig>({
     user_id: currentUser?._id || null,
     task_name: "New task",
+    task_type: TaskType.NORMAL,
     description: "This is a new task",
     fetch_config: {
       method: FetchMethod.GET,
@@ -64,37 +65,26 @@ function TaskEditPageContent() {
     router.push("/main/tasks/run?id=" + taskID);
   }
 
-  const handleChangeFetchMethod = (value: string) => {
+  const handleChangeTaskType = (value: string) => {
     setTask({
       ...task,
+      task_type: value as TaskType,
       fetch_config: {
         ...task.fetch_config,
-        method: value as FetchMethod
-      }
-    })
-  }
-
-  const handleChangeDataType = (value: string) => {
-    setTask({
-      ...task,
-      fetch_config: {
-        ...task.fetch_config,
-        data_type: value as FetchDataType
-      }
-    })
-  }
-
-  const handleChangeAuthTokenType = (value: string) => {
-    setTask({
-      ...task,
-      fetch_config: {
-        ...task.fetch_config,
+        method: value === TaskType.SPITZECO ? FetchMethod.GET : task.fetch_config.method,
+        url: value === TaskType.SPITZECO ? "https://api.spitzeco.dk/kb" : task.fetch_config.url,
         auth_token: {
           ...task.fetch_config.auth_token,
-          type: value as FetchTokenType
-        }
+          type: value === TaskType.SPITZECO ? FetchTokenType.HEADER_TOKEN : task.fetch_config.auth_token.type,
+          token: value === TaskType.SPITZECO
+            ? { "ocp-apim-subscription-key": "" }
+            : task.fetch_config.auth_token.token,
+        },
+        data_type: value === TaskType.SPITZECO ? FetchDataType.JSON : task.fetch_config.data_type,
+        success_code: value === TaskType.SPITZECO ? 200 : task.fetch_config.success_code,
       }
-    })
+    });
+
   }
 
   const handleAddToken = () => {
@@ -277,6 +267,23 @@ function TaskEditPageContent() {
                 This value is used for task scheduling. Scheduled task will run every {task.interval_secs} seconds
               </legend>
             </fieldset>
+
+            {/* Task Type */}
+            <fieldset>
+              <legend className="fieldset-legend">Task Type</legend>
+              <select
+                className="select select-bordered select-sm w-60"
+                value={task.task_type}
+                onChange={(e) => handleChangeTaskType(e.target.value)}
+              >
+                <option disabled value="">Select task type</option>
+                {taskTypeCodes.map((key) => (
+                  <option key={key} value={key}>
+                    {lookupValue(taskTypeMap, key)}
+                  </option>
+                ))}
+              </select>
+            </fieldset>
           </div>
 
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -289,7 +296,7 @@ function TaskEditPageContent() {
                   <select
                     className="select select-bordered select-sm w-60"
                     value={task.fetch_config.method}
-                    onChange={(e) => handleChangeFetchMethod(e.target.value)}
+                    onChange={(e) => setTask({ ...task, fetch_config: { ...task.fetch_config, method: e.target.value as FetchMethod } })}
                   >
                     <option disabled value="">Select fetch method</option>
                     {fetchMethodCodes.map((key) => (
@@ -314,7 +321,7 @@ function TaskEditPageContent() {
                   <select
                     className="select select-bordered select-sm w-60"
                     value={task.fetch_config.data_type}
-                    onChange={(e) => handleChangeDataType(e.target.value)}
+                    onChange={(e) => setTask({ ...task, fetch_config: { ...task.fetch_config, data_type: e.target.value as FetchDataType } })}
                   >
                     <option disabled value="">Select data type</option>
                     {fetchDataTypeCodes.map((key) => (
@@ -339,7 +346,7 @@ function TaskEditPageContent() {
                   <select
                     className="select select-bordered select-sm w-60"
                     value={task.fetch_config.auth_token.type}
-                    onChange={(e) => handleChangeAuthTokenType(e.target.value as FetchTokenType)}
+                    onChange={(e) => setTask({ ...task, fetch_config: { ...task.fetch_config, auth_token: { ...task.fetch_config.auth_token, type: e.target.value as FetchTokenType } } })}
                   >
                     <option disabled value="">Select token type</option>
                     {fetchTokenTypeCodes.map((key) => (
