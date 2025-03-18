@@ -52,6 +52,7 @@ export default function TaskRunPage() {
 
   const preRef = useRef<HTMLPreElement>(null);
   const [taskLog, setTaskLog] = useState<string>("");
+  const [autoScrollLog, setAutoScrollLog] = useState<boolean>(true);
 
   const fetchTask = async () => {
     const response = await axiosHelper.get<TaskConfigRead>(`/task-config/get/${taskID}`);
@@ -123,6 +124,7 @@ export default function TaskRunPage() {
   // Hooks
   useEffect(() => {
     fetchTask();
+    fetchTaskLog();
     const intervalId = setInterval(() => {
       fetchTaskLog();
     }, 5000);
@@ -130,10 +132,10 @@ export default function TaskRunPage() {
   }, []); // eslint-disable-line
 
   useEffect(() => {
-    if (preRef.current) {
+    if (preRef.current && autoScrollLog) {
       preRef.current.scrollTop = preRef.current.scrollHeight;
     }
-  }, [taskLog]);
+  }, [taskLog, autoScrollLog]);
 
   return (
     <div>
@@ -213,12 +215,25 @@ export default function TaskRunPage() {
             </tbody>
           </table>
         </div>
-        <pre
-          ref={preRef}
-          className="font-mono text-xs h-40 resize-y overflow-auto border border-base-300 bg-base-100"
-        >
-          {taskLog}
-        </pre>
+        <div className="w-full flex flex-col gap-2">
+          <div className="w-full flex justify-end">
+            <label className="fieldset-label text-sm">
+              <input
+                type="checkbox"
+                checked={autoScrollLog}
+                className="checkbox checkbox-sm"
+                onChange={(e) => setAutoScrollLog(e.target.checked)}
+              />
+              Auto Scroll Logs
+            </label>
+          </div>
+          <pre
+            ref={preRef}
+            className="font-mono text-sm h-[calc(100vh-37.5rem)] resize-y overflow-auto border border-base-300 bg-base-100"
+          >
+            {taskLog}
+          </pre>
+        </div>
       </div>
     </div>
   )
