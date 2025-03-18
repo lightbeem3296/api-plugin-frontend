@@ -9,7 +9,7 @@ import { lookupValue } from "@/utils/record";
 import { faArrowLeft, faEdit, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function TaskRunPage() {
   const router = useRouter();
@@ -50,10 +50,20 @@ export default function TaskRunPage() {
     task_args: {},
   });
 
+  const preRef = useRef<HTMLPreElement>(null);
+  const [taskLog, setTaskLog] = useState<string>("");
+
   const fetchTask = async () => {
     const response = await axiosHelper.get<TaskConfigRead>(`/task-config/get/${taskID}`);
     if (response) {
       setTask(response);
+    }
+  }
+
+  const fetchTaskLog = async () => {
+    const response = await axiosHelper.get<string>(`/logs/get/${taskID}`);
+    if (response) {
+      setTaskLog(response);
     }
   }
 
@@ -113,7 +123,17 @@ export default function TaskRunPage() {
   // Hooks
   useEffect(() => {
     fetchTask();
+    const intervalId = setInterval(() => {
+      fetchTaskLog();
+    }, 5000);
+    return () => clearInterval(intervalId);
   }, []); // eslint-disable-line
+
+  useEffect(() => {
+    if (preRef.current) {
+      preRef.current.scrollTop = preRef.current.scrollHeight;
+    }
+  }, [taskLog]);
 
   return (
     <div>
@@ -193,7 +213,13 @@ export default function TaskRunPage() {
             </tbody>
           </table>
         </div>
+        <pre
+          ref={preRef}
+          className="font-mono text-xs h-40 resize-y overflow-auto border border-base-300 bg-base-100"
+        >
+          {taskLog}
+        </pre>
       </div>
-    </div >
+    </div>
   )
 }
